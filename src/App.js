@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import { Battle, List } from './components';
+import List from './components/list';
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
 
 const styles = {
   app: {
@@ -48,26 +43,12 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <div className="App" style={styles.app}>
-          {/* A <Switch> looks through its children <Route>s and
-              renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path="/battle">
-              <Battle
-                pokeArr={this.state.pokeArr}
-                selectedPoke={this.state.selectedPoke}
-              />
-            </Route>
-            <Route path="/">
-              <List
-                pokeArr={this.state.pokeArr}
-                setSelected={this.setSelected}
-              />
-            </Route>
-          </Switch>
-        </div>
-      </Router>
+      <div className="App" style={styles.app}>
+        <List
+          pokeArr={this.state.pokeArr}
+          setSelected={this.setSelected}
+        />
+      </div>
     );
   }
 }
