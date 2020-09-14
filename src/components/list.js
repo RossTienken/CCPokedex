@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { fade, withStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -182,8 +181,7 @@ class List extends Component {
         types: [],
         weaknesses: []
       },
-      filtExpanded: false,
-      search: '',
+      filtExpanded: false
     }
   }
 
@@ -216,15 +214,10 @@ class List extends Component {
       let checkType = filters.types.every(type => poke.type.includes(type))
       let checkWeak = filters.weaknesses.every(weak => poke.weaknesses.includes(weak))
 
-      if(checkType && checkWeak) return poke
+      return checkType && checkWeak
     })
 
     this.setState({ filteredPokemon: filteredArr })
-  }
-
-  onSearchChange = (event) => {
-    // directly set state to avoid lag for search input
-    this.state.search = event.target.value
   }
 
   searchPokemon = () => {
@@ -324,7 +317,6 @@ class List extends Component {
         weaknesses: []
       },
       filtExpanded: false,
-      search: ''
     })
 
     document.getElementById('searchBar').value = ''
@@ -333,7 +325,6 @@ class List extends Component {
 
   render() {
     const { classes } = this.props;
-    let { search } = this.state
 
     // determine which pokemon cards to show, based on filters
     let cardsToShow = this.isFiltered()
@@ -351,7 +342,6 @@ class List extends Component {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onChange={this.onSearchChange}
             />
             <div className={classes.searchIcon} onClick={this.searchPokemon}>
               <SearchIcon />
@@ -380,6 +370,7 @@ class List extends Component {
               key={pokemon.name}
               pokeArr={this.props.pokeArr}
               pokemon={pokemon}
+              setSelected={this.props.setSelected}
             />
           ))}
         </div>
