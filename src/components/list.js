@@ -116,9 +116,6 @@ const styles = (theme) => ({
     borderRadius: theme.shape.borderRadius,
     border: '#FFCB05 solid 2px',
     backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
     width: 240,
     [theme.breakpoints.down('sm')]: {
       width: 'auto',
@@ -131,13 +128,9 @@ const styles = (theme) => ({
     position: 'absolute',
     top: 0,
     right: 0,
-    cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    }
+    justifyContent: 'center'
   },
   inputRoot: {
     color: 'white',
@@ -177,12 +170,12 @@ class List extends Component {
     super(props)
     this.state = {
       filteredPokemon: null,
+      searchedPokemon: null,
       filters: {
         types: [],
         weaknesses: []
       },
-      filtExpanded: false,
-      search: ''
+      filtExpanded: false
     }
   }
 
@@ -207,12 +200,6 @@ class List extends Component {
     )
   }
 
-  onSearchChange = (event) => {
-    // directly set state to avoid lag for search input (this is ok because this value is only used for search text, and we do not want to cause a rerender for every letter)
-
-    this.state.search = event.target.value
-  }
-
   filterPokemon = () => {
     const { pokeArr } = this.props
     const { filters } = this.state
@@ -227,18 +214,21 @@ class List extends Component {
     this.setState({ filteredPokemon: filteredArr })
   }
 
-  searchPokemon = () => {
+  searchPokemon = (event) => {
     const { pokeArr } = this.props
-    let { filteredPokemon, filters, search } = this.state
+    let { filteredPokemon, filters } = this.state
 
-    if(!search) {
-      this.setState({ filteredPokemon: null })
-      return
-    }
+    let search = event.target.value
 
     // determine if filters are present
     let areFilters = false
     if(filters.types.length > 0 || filters.weaknesses.length > 0) areFilters = true
+
+
+    if(!search && !areFilters) {
+      this.setState({ filteredPokemon: null, searchedPokemon: null })
+      return
+    }
 
     // if no filters are currently present, search from all pokemon
     if(!areFilters) {
@@ -249,10 +239,11 @@ class List extends Component {
       this.setState({ filteredPokemon: searchAll })
     }
     else {
+
       let searchFilt = filteredPokemon.filter(poke => {
         return poke.name.toLowerCase().includes(search)
       })
-      this.setState({ filteredPokemon: searchFilt })
+      this.setState({ searchedPokemon: searchFilt })
     }
   }
 
@@ -310,21 +301,23 @@ class List extends Component {
   }
 
   isFiltered = () => {
-    let { filteredPokemon } = this.state
+    let { filteredPokemon, searchedPokemon } = this.state
 
-    // if there are any filters, set to filteredPokemon array from state
-    return filteredPokemon ? filteredPokemon : this.props.pokeArr
+    // return searchedPokemon if present, then filteredPokemon, and last pokeArr if neither are present
+    if(searchedPokemon) return searchedPokemon
+    if(filteredPokemon) return filteredPokemon
+    else return this.props.pokeArr
   }
 
   clearAll = () => {
     this.setState({
       filteredPokemon: null,
+      searchedPokemon: null,
       filters: {
         types: [],
         weaknesses: []
       },
-      filtExpanded: false,
-      search: ''
+      filtExpanded: false
     })
 
     document.getElementById('searchBar').value = ''
@@ -350,9 +343,9 @@ class List extends Component {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onChange={this.onSearchChange}
+              onChange={this.searchPokemon}
             />
-            <div className={classes.searchIcon} onClick={this.searchPokemon}>
+            <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
           </div>
