@@ -181,7 +181,8 @@ class List extends Component {
         types: [],
         weaknesses: []
       },
-      filtExpanded: false
+      filtExpanded: false,
+      search: ''
     }
   }
 
@@ -204,6 +205,12 @@ class List extends Component {
     }),
       this.filterPokemon // run filter after setState
     )
+  }
+
+  onSearchChange = (event) => {
+    // directly set state to avoid lag for search input (this is ok because this value is only used for search text, and we do not want to cause a rerender for every letter)
+
+    this.state.search = event.target.value
   }
 
   filterPokemon = () => {
@@ -317,6 +324,7 @@ class List extends Component {
         weaknesses: []
       },
       filtExpanded: false,
+      search: ''
     })
 
     document.getElementById('searchBar').value = ''
@@ -342,6 +350,7 @@ class List extends Component {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={this.onSearchChange}
             />
             <div className={classes.searchIcon} onClick={this.searchPokemon}>
               <SearchIcon />
