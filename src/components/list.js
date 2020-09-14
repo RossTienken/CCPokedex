@@ -370,6 +370,7 @@ class List extends Component {
               key={pokemon.name}
               pokeArr={this.props.pokeArr}
               pokemon={pokemon}
+              setSelected={this.props.setSelected}
             />
           ))}
         </div>
