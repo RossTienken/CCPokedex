@@ -46,7 +46,10 @@ const styles = (theme) => ({
     height: 'fit-content',
     width: '30%',
     color: '#424242',
-    border: '5px solid #FFCB05'
+    border: '5px solid #FFCB05',
+    [theme.breakpoints.down('sm')]: {
+      width: '40%',
+    },
   },
   cardTop: {
     display: 'flex',
@@ -69,6 +72,27 @@ const styles = (theme) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  evoContainer: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'space-evenly',
+    [theme.breakpoints.up('lg')]: {
+      flexFlow: 'row',
+      alignItems: 'center',
+    },
+  },
+  evoItem: {
+    width: '100%',
+  },
+  evoPokeContainer: {
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'space-evenly',
+    [theme.breakpoints.up('lg')]: {
+      flexFlow: 'row',
+      alignItems: 'center',
+    },
+  },
   evoImg: {
     height: 85,
     width: 85,
@@ -88,7 +112,11 @@ const styles = (theme) => ({
   pokeSizeContainer: {
     display: 'flex',
     flexFlow: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    [theme.breakpoints.down('sm')]: {
+      flexFlow: 'column',
+      alignItems: 'center',
+    },
   },
   pokeSize: {
     display: 'flex',
@@ -124,16 +152,18 @@ class PokeCard extends Component {
     return (
       <div className={classes.evoItem}>
         <h5 className={classes.infoTitle}> {evoString} </h5>
-        {evoArr.map(poke => (
-          <div className={classes.evoPoke} key={evoType + poke.num} >
-            <img
-              className={classes.evoImg}
-              src={pokeArr[(poke.num - 1)].img}
-              alt={poke.name}
-            />
-            <p className={classes.infoDesc}> {poke.name} </p>
-          </div>
-        ))}
+        <div className={classes.evoPokeContainer}>
+          {evoArr.map(poke => (
+            <div className={classes.evoPoke} key={evoType + poke.num} >
+              <img
+                className={classes.evoImg}
+                src={pokeArr[(poke.num - 1)].img}
+                alt={poke.name}
+              />
+              <p className={classes.infoDesc}> {poke.name} </p>
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
